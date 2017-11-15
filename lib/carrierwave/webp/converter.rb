@@ -6,9 +6,9 @@ module CarrierWave
   module WebP
     module Converter
       def convert_to_webp(options = {})
-	binding.pry
         manipulate! do |img|
           img          = yield(img) if block_given?
+	  binding.pry
           webp_path    = "#{img.path}.webp"
           old_filename = filename
 
