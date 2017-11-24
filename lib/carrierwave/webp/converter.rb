@@ -7,17 +7,16 @@ module CarrierWave
     module Converter
       def convert_to_webp(options = {})
         manipulate! do |img|
-          binding.pry
           img          = yield(img) if block_given?
-          webp_path    = "#{img.path}.webp"
+          webp_path    = "#{img.filename.sub(/png|jpeg|gif|png/, 'webp')}"
           old_filename = filename
 
-          ::WebP.encode(img.path, webp_path, options)
+          ::WebP.encode(img.filename, webp_path, options)
 
           # XXX: Hacks ahead!
           # I can't find any other way to store an alomost exact copy
           # of file for any particular version
-          instance_variable_set('@filename', "#{filename}.webp")
+          instance_variable_set('@filename', webp_path)
 
           storage.store! SanitizedFile.new({
             tempfile: webp_path, filename: webp_path,
